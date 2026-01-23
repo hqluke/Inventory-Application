@@ -1,0 +1,20 @@
+<html lang="en">
+    <head>
+        <title>Food Page</title>
+    </head>
+    <body>
+        <h1>Welcome to the food page</h1>
+        <% if (foods.length > 0) { %>
+        <ul>
+            <% foods.forEach(food => { %>
+
+            <li><%= food.name %></li>
+            <% }) %>
+        </ul>
+        <% } else { %>
+        <p>No foods found</p>
+        <% } %>
+        <p>click on the links below to go to the other pages</p>
+        <a href="/occupation">Occupation</a>
+    </body>
+</html>
