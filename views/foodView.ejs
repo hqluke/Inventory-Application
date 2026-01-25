@@ -3,6 +3,9 @@
         <title>Food Page</title>
     </head>
     <body>
+        <% if (successMessage) { %>
+        <div class="success"><%= successMessage %></div>
+        <% } %>
         <h1>Welcome to the food page</h1>
         <% if (foods.length > 0) { %>
         <ul>
@@ -15,6 +18,7 @@
         <p>No foods found</p>
         <% } %>
         <p>Don't see your food? <a href="/food/add">Add it here</a></p>
+        <p>Or <a href="/food/remove">remove it here</a></p>
         <a href="/">Back</a>
     </body>
 </html>

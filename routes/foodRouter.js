@@ -4,7 +4,11 @@ const foodRouter = express.Router();
 
 console.log("foodRouter");
 foodRouter.get("/", foodcontroller.getFood);
+
 foodRouter.get("/add", foodcontroller.addFood);
-foodRouter.post("/add", foodcontroller.postFood);
+foodRouter.post("/add", foodcontroller.validateFood, foodcontroller.postFood);
+
+foodRouter.post("/remove", foodcontroller.postRemove);
+foodRouter.get("/remove", foodcontroller.getRemove);
 
 module.exports = foodRouter;

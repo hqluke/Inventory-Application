@@ -1,0 +1,29 @@
+<html lang="en">
+    <head>
+        <title>Remove Food</title>
+    </head>
+    <body>
+        <h1>Remove Food</h1>
+        <% if (errors && errors.length > 0) { %>
+        <div class="error">
+            <ul>
+                <% errors.forEach(error => { %>
+                <li><%= error.msg %></li>
+                <% }); %>
+            </ul>
+        </div>
+        <% } %>
+        <p>Only foods that are not assigned to people can be removed.</p>
+        <form action="/food/remove" method="POST">
+            <label for="name">Food to remove:</label>
+            <select name="name" id="name">
+                <% foods.forEach(food => { %>
+                <option value="<%= food.name %>"><%= food.name %></option>
+                <% }) %>
+            </select>
+            <input type="submit" value="Remove" />
+        </form>
+        <a href="/">Home</a>
+        <a href="/food">Back to food</a>
+    </body>
+</html>
