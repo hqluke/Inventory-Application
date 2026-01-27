@@ -1,0 +1,23 @@
+<html>
+    <head>
+        <title>Occupations</title>
+    </head>
+    <body>
+        <h1>Occupations</h1>
+        <% if (occupations.length > 0) { %>
+        <ul>
+            <% occupations.forEach(occupation => { %>
+            <li><%= occupation.title %></li>
+            <% }) %>
+        </ul>
+        <% } else { %>
+        <p>No occupations found.</p>
+        <% } %>
+        <p>
+            Don't see your occupation?
+            <a href="/occupation/create">Create it</a>
+        </p>
+        <p>Or remove it <a href="/occupation/remove">here</a></p>
+        <a href="/">Back</a>
+    </body>
+</html>

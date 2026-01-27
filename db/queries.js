@@ -11,6 +11,7 @@ async function getAllFood() {
         console.log("No foods found.");
     } else {
         console.log("Foods found, displaying all.");
+        console.log(rows);
     }
     return rows;
 }
@@ -52,9 +53,22 @@ async function removeFood(name) {
     return result;
 }
 
+async function getAllOccupations() {
+    console.log("Calling database for occupations");
+    const { rows } = await pool.query("SELECT * FROM occupation");
+    if (rows.length === 0) {
+        console.log("No occupations found.");
+    } else {
+        console.log("Occupations found, displaying all.");
+        console.log(rows);
+    }
+    return rows;
+}
+
 module.exports = {
     getAllFood,
     createFood,
     removeFood,
     getRemovableFoods,
+    getAllOccupations,
 };
