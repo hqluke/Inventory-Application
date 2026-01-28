@@ -1,0 +1,26 @@
+<html lang="en">
+    <head>
+        <title>Person</title>
+    </head>
+    <body>
+        <h1>Person</h1>
+        <% if (successMessage) { %>
+        <p><%= successMessage %></p>
+        <% } %>
+        <% if (person.length > 0) { %>
+        <ul>
+            <% person.forEach(person => { %>
+            <li><%= person.name %></li>
+            <% }) %>
+        </ul>
+        <% } else { %>
+        <p>No people found.</p>
+        <% } %>
+        <p>
+            Don't see your person?
+            <a href="/person/create">Create it</a>
+        </p>
+        <p>Or remove it <a href="/person/remove">here</a></p>
+        <a href="/">Back</a>
+    </body>
+    </html>

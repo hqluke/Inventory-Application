@@ -103,6 +103,18 @@ async function removeOccupation(title) {
     return result;
 }
 
+async function getAllPerson() {
+    console.log("Calling database for people");
+    const { rows } = await pool.query("SELECT * FROM person");
+    if (rows.length === 0) {
+        console.log("No people found.");
+    } else {
+        console.log("People found, displaying all.");
+        console.log(rows);
+    }
+    return rows;
+}
+
 module.exports = {
     getAllFood,
     createFood,
@@ -112,4 +124,5 @@ module.exports = {
     createOccupation,
     removeOccupation,
     getRemoveableOccupations,
+    getAllPerson,
 };
