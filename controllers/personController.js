@@ -47,9 +47,48 @@ async function getPerson(req, res) {
     res.render("personView", { person, successMessage });
 }
 
+async function getCreatePerson(req, res) {
+    console.log("-----Create Person Page-----");
+    const foods = await db.getAllFood();
+    const occupations = await db.getAllOccupations();
+    res.render("personCreate", {
+        occupations,
+        foods,
+        errors: null,
+        name: "",
+        height: "",
+        weight: "",
+    });
+}
+
+async function postCreatePerson(req, res) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.render("personCreate.ejs", {
+            errors: errors.array(),
+            name: req.body.name,
+            height: req.body.height,
+            weight: req.body.weight,
+            occupations: await db.getAllOccupations(),
+            foods: await db.getAllFood(),
+        });
+    }
+    console.log("No errors found, creating person");
+    const { name, height, weight, job, favfood } = req.body;
+    const rowcount = await db.createPerson(name, height, weight, favfood, job);
+    console.log("return person rowcount", rowcount);
+    if (rowcount.rowCount == 0) {
+        res.redirect("/person?successAdd=false");
+    } else {
+        res.redirect("/person?successAdd=true");
+    }
+}
+
 module.exports = {
     getPerson,
     validatePerson,
     validateHeight,
     validateWeight,
+    getCreatePerson,
+    postCreatePerson,
 };

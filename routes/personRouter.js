@@ -4,5 +4,14 @@ const personRouter = express.Router();
 
 personRouter.get("/", personController.getPerson);
 
+personRouter.get("/create", personController.getCreatePerson);
+personRouter.post(
+    "/create",
+    personController.validatePerson,
+    personController.validateHeight,
+    personController.validateWeight,
+    personController.postCreatePerson,
+);
+
 
 module.exports = personRouter;

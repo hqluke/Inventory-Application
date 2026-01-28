@@ -115,6 +115,20 @@ async function getAllPerson() {
     return rows;
 }
 
+async function createPerson(name, height, weight, favfood, job) {
+    console.log("Creating person.");
+    const result = await pool.query(
+        "INSERT INTO person (name, height, weight, favfood, job) VALUES ($1, $2, $3, $4, $5)",
+        [name, height, weight, favfood, job],
+    );
+    if (result.rowCount === 0) {
+        console.log("Person already exists.");
+    } else {
+        console.log("Person created.");
+    }
+    return result;
+}
+
 module.exports = {
     getAllFood,
     createFood,
@@ -125,4 +139,5 @@ module.exports = {
     removeOccupation,
     getRemoveableOccupations,
     getAllPerson,
+    createPerson,
 };
