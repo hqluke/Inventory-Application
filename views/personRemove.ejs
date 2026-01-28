@@ -1,0 +1,39 @@
+<html>
+    <head>
+        <title>Remove Person</title>
+    </head>
+    <body>
+        <h1>Remove Person</h1>
+                <% if (successMessage) { %>
+        <p><%= successMessage %></p>
+        <% } %>
+
+        <% if (errors) { %>
+        <ul>
+            <% errors.forEach(error => { %>
+            <li><%= error.msg %></li>
+            <% }) %>
+        </ul>
+        <% } %>
+        <p>
+            People will be removed, the food and job will still exist in the database.
+        </p>
+        <% if (people.length === 0) { %>
+        <p>No people available to remove.</p>
+        <% } else { %>
+
+        <form action="/person/remove" method="POST">
+            <label for="personId"> People to remove:</label>
+            <select name="personId">
+                <% people.forEach(person => { %>
+                <option value="<%= person.id %>"><%= person.name %></option>
+                <% }) %>
+            </select>
+            <input type="submit" value="Remove" />
+        </form>
+        <% } %>
+        <a href="/">Home</a>
+        <a href="/person">Back</a>
+    </body>
+</html>
+

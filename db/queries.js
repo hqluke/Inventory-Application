@@ -129,6 +129,17 @@ async function createPerson(name, height, weight, favfood, job) {
     return result;
 }
 
+async function removePerson(id) {
+    console.log("Removing person.");
+    const result = await pool.query("DELETE FROM person WHERE id = $1", [id]);
+    if (result.rowCount === 0) {
+        console.log("Person does not exist.");
+    } else {
+        console.log("Person removed.");
+    }
+    return result;
+}
+
 module.exports = {
     getAllFood,
     createFood,
@@ -140,4 +151,5 @@ module.exports = {
     getRemoveableOccupations,
     getAllPerson,
     createPerson,
+    removePerson,
 };

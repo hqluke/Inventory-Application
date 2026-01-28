@@ -13,5 +13,7 @@ personRouter.post(
     personController.postCreatePerson,
 );
 
+personRouter.get("/remove", personController.getRemovePerson);
+personRouter.post("/remove", personController.postRemovePerson);
 
 module.exports = personRouter;

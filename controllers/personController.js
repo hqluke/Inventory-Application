@@ -84,6 +84,31 @@ async function postCreatePerson(req, res) {
     }
 }
 
+async function getRemovePerson(req, res) {
+    console.log("-----Remove Person Page-----");
+    const people = await db.getAllPerson();
+    let successMessage = null;
+    if (req.query.successRemove === "true") {
+        successMessage = "Person removed successfully!";
+    } else if (req.query.successRemove === "false") {
+        successMessage = "Person does not exist!";
+    }
+
+    res.render("personRemove", { people, successMessage, errors: null });
+}
+
+async function postRemovePerson(req, res) {
+    const { personId } = req.body;
+    console.log("Id:", personId);
+    const rowcount = await db.removePerson(personId);
+    console.log("return person rowcount", rowcount);
+    if (rowcount.rowCount == 0) {
+        res.redirect("/person/remove?successRemove=false");
+    } else {
+        res.redirect("/person/remove?successRemove=true");
+    }
+}
+
 module.exports = {
     getPerson,
     validatePerson,
@@ -91,4 +116,6 @@ module.exports = {
     validateWeight,
     getCreatePerson,
     postCreatePerson,
+    getRemovePerson,
+    postRemovePerson,
 };
