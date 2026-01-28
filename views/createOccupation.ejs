@@ -1,0 +1,35 @@
+<html>
+    <head>
+        <title>Create Occupation</title>
+    </head>
+    <body>
+        <h1>Create Occupation</h1>
+        <% if (errors) { %>
+        <ul>
+            <% errors.forEach(error => { %>
+            <li><%= error.msg %></li>
+            <% }) %>
+        </ul>
+        <%}%>
+        <form action="/occupation/create" method="POST">
+            <label for="title">Title:</label>
+            <input type="text" name="title" value="<%= title || '' %>" />
+            <label for="description">Description:</label>
+            <input
+                type="text"
+                name="description"
+                value="<%= description || '' %>"
+            />
+            <label for="startdate">Start Date:</label>
+            <input
+             type="date"
+             name="startdate"
+             value="<%= startdate || new Date().toISOString().split('T')[0] %>"
+            />
+
+            <input type="submit" value="Create" />
+        </form>
+        <a href="/">Home</a>
+        <a href="/occupation">Back</a>
+    </body>
+</html>

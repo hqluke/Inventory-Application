@@ -1,10 +1,18 @@
 const express = require("express");
-occupationcontroller = require("../controllers/occupationController");
+occupationController = require("../controllers/occupationController");
 const occupationRouter = express.Router();
 
-occupationRouter.get("/", (req, res) => {
-    console.log("----Occupation Page----");
-    occupationcontroller.getAllOccupations(res);
-});
+occupationRouter.get("/", occupationController.getOccupations);
+
+occupationRouter.get("/create", occupationController.getCreateOccupation);
+occupationRouter.post(
+    "/create",
+    occupationController.validateTitle,
+    occupationController.validateDescription,
+    occupationController.postCreateOccupation,
+);
+
+occupationRouter.get("/remove", occupationController.getRemoveOccupation);
+occupationRouter.post("/remove", occupationController.postRemoveOccupation);
 
 module.exports = occupationRouter;

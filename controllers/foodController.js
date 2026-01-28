@@ -17,16 +17,18 @@ async function getFood(req, res) {
     console.log("Calling database for food");
     const foods = await db.getAllFood();
     let successMessage = null;
-    if (req.query.successAdd) {
+    if (req.query.successAdd === "true") {
         successMessage = "Food added successfully!";
-    } else if (req.query.successRemove) {
+    } else if (req.query.successAdd === "false") {
+        successMessage = "Food not added, it already exists!";
+    } else if (req.query.successRemove === "true") {
         successMessage = "Food removed successfully!";
-    } else {
-        successMessage = null;
+    } else if (req.query.successRemove === "false") {
+        successMessage = "Food does not exist!";
     }
+
     res.render("foodView", { foods, successMessage });
 }
-
 async function postFood(req, res) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -37,9 +39,13 @@ async function postFood(req, res) {
     }
     console.log("No errors found, creating food");
     const { name } = req.body;
-    await db.createFood(name);
-    //TODO: still redirects even if food already exists
-    res.redirect("/food?successAdd=true");
+    const rowcount = await db.createFood(name);
+    console.log("rowcount", rowcount);
+    if (rowcount.rowCount == 0) {
+        res.redirect("/food?successAdd=false");
+    } else {
+        res.redirect("/food?successAdd=true");
+    }
 }
 
 async function addFood(req, res) {
@@ -50,12 +56,14 @@ async function addFood(req, res) {
 async function postRemove(req, res) {
     const { name } = req.body;
     console.log(`Food to remove: ${name}`);
-    await db.removeFood(name);
-    //TODO: still redirects even if food isn't removed
-    res.redirect("/food?successRemove=true");
+    const rowcount = await db.removeFood(name);
+    console.log("rowcount", rowcount);
+    if (rowcount.rowCount === 0) {
+        res.redirect("/food?successRemove=false");
+    } else {
+        res.redirect("/food?successRemove=true");
+    }
 }
-
-
 
 async function getRemove(req, res) {
     console.log("------Remove Food Page-----");

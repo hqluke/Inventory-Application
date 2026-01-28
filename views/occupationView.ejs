@@ -4,6 +4,9 @@
     </head>
     <body>
         <h1>Occupations</h1>
+        <% if (successMessage) { %>
+        <p><%= successMessage %></p>
+        <% } %>
         <% if (occupations.length > 0) { %>
         <ul>
             <% occupations.forEach(occupation => { %>

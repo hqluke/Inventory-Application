@@ -1,0 +1,39 @@
+<html>
+    <head>
+        <title>Remove Occupation</title>
+    </head>
+    <body>
+        <h1>Remove Occupation</h1>
+                <% if (successMessage) { %>
+        <p><%= successMessage %></p>
+        <% } %>
+
+        <% if (errors) { %>
+        <ul>
+            <% errors.forEach(error => { %>
+            <li><%= error.msg %></li>
+            <% }) %>
+        </ul>
+        <% } %>
+        <p>
+            Only occupations that are not currently assigned to people can be
+            removed.
+        </p>
+        <% if (occupations.length === 0) { %>
+        <p>No occupations available to remove.</p>
+        <% } else { %>
+
+        <form action="/occupation/remove" method="POST">
+            <label for="title">Jobs to remove:</label>
+            <select name="title" id="title">
+                <% occupations.forEach(occupation => { %>
+                <option value="<%= occupation.title %>"><%= occupation.title %></option>
+                <% }) %>
+            </select>
+            <input type="submit" value="Remove" />
+        </form>
+        <% } %>
+        <a href="/">Home</a>
+        <a href="/occupation">Back</a>
+    </body>
+</html>

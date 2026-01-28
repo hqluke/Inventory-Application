@@ -65,10 +65,51 @@ async function getAllOccupations() {
     return rows;
 }
 
+async function getRemoveableOccupations() {
+    const { rows } = await pool.query(`
+        SELECT o.* 
+        FROM occupation o
+        LEFT JOIN person p ON o.title = p.job
+        WHERE p.job IS NULL
+    `);
+    console.log("Found removable occupations.");
+    return rows;
+}
+
+async function createOccupation(title, description, startdate) {
+    console.log("Creating occupation.");
+    const result = await pool.query(
+        "INSERT INTO occupation (title, description, startdate) VALUES ($1, $2, $3) ON CONFLICT (title) DO NOTHING",
+        [title, description, startdate],
+    );
+    if (result.rowCount === 0) {
+        console.log("Occupation already exists.");
+    } else {
+        console.log("Occupation created.");
+    }
+    return result;
+}
+
+async function removeOccupation(title) {
+    console.log("Removing occupation.");
+    const result = await pool.query("DELETE FROM occupation WHERE title = $1", [
+        title,
+    ]);
+    if (result.rowCount === 0) {
+        console.log("Occupation does not exist.");
+    } else {
+        console.log("Occupation removed.");
+    }
+    return result;
+}
+
 module.exports = {
     getAllFood,
     createFood,
     removeFood,
     getRemovableFoods,
     getAllOccupations,
+    createOccupation,
+    removeOccupation,
+    getRemoveableOccupations,
 };
