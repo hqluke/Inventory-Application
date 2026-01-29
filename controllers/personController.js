@@ -12,7 +12,7 @@ const validatePerson = [
         .trim()
         .isLength({ min: 1, max: 100 })
         .withMessage(nameLengthOneHundredErrorMessage)
-        .isAlpha()
+        .isAlpha("en-US", { ignore: " " })
         .withMessage(alphaErrorMessage),
 ];
 
@@ -33,6 +33,8 @@ const validateWeight = [
 async function getPerson(req, res) {
     console.log("-----Person Page-----");
     const person = await db.getAllPerson();
+    const foods = await db.getAllFood();
+    const occupations = await db.getAllOccupations();
     let successMessage = null;
     if (req.query.successAdd === "true") {
         successMessage = "Person added successfully!";
@@ -42,9 +44,13 @@ async function getPerson(req, res) {
         successMessage = "Person removed successfully!";
     } else if (req.query.successRemove === "false") {
         successMessage = "Person does not exist!";
+    } else if (req.query.successEdit === "true") {
+        successMessage = "Person edited successfully!";
+    } else if (req.query.successEdit === "false") {
+        successMessage = "Person not edited, something went wrong!";
     }
 
-    res.render("personView", { person, successMessage });
+    res.render("personView", { person, successMessage, foods, occupations });
 }
 
 async function getCreatePerson(req, res) {
@@ -109,6 +115,19 @@ async function postRemovePerson(req, res) {
     }
 }
 
+async function editPerson(req, res) {
+    console.log("-----Edit Person Request-----");
+    const { id, name, height, weight, favfood, job } = req.body;
+    console.log("Id:", id);
+    const result = await db.editPerson(id, name, height, weight, favfood, job);
+    console.log("return person rowcount", result);
+    if (result.rowCount == 0) {
+        res.redirect("/person?successEdit=false");
+    } else {
+        res.redirect("/person?successEdit=true");
+    }
+}
+
 module.exports = {
     getPerson,
     validatePerson,
@@ -118,4 +137,5 @@ module.exports = {
     postCreatePerson,
     getRemovePerson,
     postRemovePerson,
+    editPerson,
 };

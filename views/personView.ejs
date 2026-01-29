@@ -11,6 +11,28 @@
         <ul>
             <% person.forEach(person => { %>
             <li><%= person.name %></li>
+<form action="/person/edit" method="POST">
+    <input type="hidden" name="id" value="<%= person.id %>">
+    <label for="name">Name:</label>
+    <input type="text" name="name" value="<%= person.name %>">
+    <label for="height">Height:</label>
+    <input type="text" name="height" value="<%= person.height %>">
+    <label for="weight">Weight:</label>
+    <input type="text" name="weight" value="<%= person.weight %>">
+    <label for="favfood">Favourite Food:</label>
+    <select name="favfood">
+        <% foods.forEach(food => { %>
+        <option value="<%= food.name %>" <%= person.favfood == food.name ? "selected" : "" %>><%= food.name %></option>
+        <% }) %>
+    </select>
+    <label for="job">Occupation:</label>
+    <select name="job">
+        <% occupations.forEach(occupation => { %>
+        <option value="<%= occupation.title %>" <%= person.job == occupation.title ? "selected" : "" %>><%= occupation.title %></option>
+        <% }) %>
+    </select>
+    <button type="submit">Save</button>
+</form> 
             <% }) %>
         </ul>
         <% } else { %>

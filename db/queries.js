@@ -140,6 +140,35 @@ async function removePerson(id) {
     return result;
 }
 
+async function getPerson(id) {
+    console.log("Calling database for people");
+    const { rows } = await pool.query("SELECT * FROM person WHERE id = $1", [
+        id,
+    ]);
+    if (rows.length === 0) {
+        console.log("No people found.");
+    } else {
+        console.log("Person found, displaying....");
+    }
+    return rows;
+}
+
+async function editPerson(id, name, height, weight, favfood, job) {
+    console.log("Editing person.");
+    console.log("Recieved data:", name, height, weight, favfood, job);
+    const result = await pool.query(
+        "UPDATE person SET name = $1, height = $2, weight = $3, favfood = $4, job = $5 WHERE id = $6",
+        [name, height, weight, favfood, job, id],
+    );
+    console.log("return person rowcount", result);
+    if (result.rowCount === 0) {
+        console.log("Person does not exist.");
+    } else {
+        console.log("Person edited.");
+    }
+    return result;
+}
+
 module.exports = {
     getAllFood,
     createFood,
@@ -152,4 +181,6 @@ module.exports = {
     getAllPerson,
     createPerson,
     removePerson,
+    getPerson,
+    editPerson,
 };
