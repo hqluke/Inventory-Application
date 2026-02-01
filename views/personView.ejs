@@ -1,38 +1,88 @@
 <html lang="en">
     <head>
         <title>Person</title>
+        <style>
+            .person-item {
+                margin-bottom: 20px;
+                padding: 10px;
+                border-bottom: 1px solid #ccc;
+            }
+            .person-display {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            .person-form {
+                display: none;
+                margin-top: 10px;
+            }
+            .form-buttons {
+                margin-top: 10px;
+            }
+        </style>
     </head>
     <body>
         <h1>Person</h1>
         <% if (successMessage) { %>
         <p><%= successMessage %></p>
         <% } %>
+        <% if (errors && errors.length > 0) { %>
+    <div class="errors">
+        <% errors.forEach(error => { %>
+            <p style="color: red;"><%= error.msg %></p>
+        <% }) %>
+    </div>
+<% } %>
         <% if (person.length > 0) { %>
-        <ul>
-            <% person.forEach(person => { %>
-            <li><%= person.name %></li>
-<form action="/person/edit" method="POST">
-    <input type="hidden" name="id" value="<%= person.id %>">
-    <label for="name">Name:</label>
-    <input type="text" name="name" value="<%= person.name %>">
-    <label for="height">Height:</label>
-    <input type="text" name="height" value="<%= person.height %>">
-    <label for="weight">Weight:</label>
-    <input type="text" name="weight" value="<%= person.weight %>">
-    <label for="favfood">Favourite Food:</label>
-    <select name="favfood">
-        <% foods.forEach(food => { %>
-        <option value="<%= food.name %>" <%= person.favfood == food.name ? "selected" : "" %>><%= food.name %></option>
-        <% }) %>
-    </select>
-    <label for="job">Occupation:</label>
-    <select name="job">
-        <% occupations.forEach(occupation => { %>
-        <option value="<%= occupation.title %>" <%= person.job == occupation.title ? "selected" : "" %>><%= occupation.title %></option>
-        <% }) %>
-    </select>
-    <button type="submit">Save</button>
-</form> 
+        <ul style="list-style: none; padding: 0;">
+            <% person.forEach((person, index) => { %>
+            <li class="person-item">
+                <div class="person-display" id="display-<%= person.id %>">
+                    <span><%= person.name %></span>
+                    <button type="button" onclick="showEditForm(<%= person.id %>)">Edit</button>
+                </div>
+                
+                <div class="person-form" id="form-<%= person.id %>">
+                    <form action="/person/edit" method="POST" id="edit-form-<%= person.id %>">
+                        <input type="hidden" name="id" value="<%= person.id %>">
+                        
+                        <label for="name-<%= person.id %>">Name:</label>
+                        <input type="text" name="name" id="name-<%= person.id %>" value="<%= person.name %>">
+                        
+                        <label for="height-<%= person.id %>">Height:</label>
+                        <input type="text" name="height" id="height-<%= person.id %>" value="<%= person.height %>">
+                        
+                        <label for="weight-<%= person.id %>">Weight:</label>
+                        <input type="text" name="weight" id="weight-<%= person.id %>" value="<%= person.weight %>">
+                        
+                        <label for="favfood-<%= person.id %>">Favourite Food:</label>
+                        <select name="favfood" id="favfood-<%= person.id %>">
+                            <% foods.forEach(food => { %>
+                            //selected is only added if the food is the same as the person's favourite food
+                            <option value="<%= food.name %>" <%= person.favfood == food.name ? "selected" : "" %>><%= food.name %></option>
+                            <% }) %>
+                        </select>
+                        
+                        <label for="job-<%= person.id %>">Occupation:</label>
+                        <select name="job" id="job-<%= person.id %>">
+                            <% occupations.forEach(occupation => { %>
+                            <option value="<%= occupation.title %>" <%= person.job == occupation.title ? "selected" : "" %>><%= occupation.title %></option>
+                            <% }) %>
+                        </select>
+                        
+                        <div class="form-buttons">
+                            <button type="button" onclick="handleSave(<%= person.id %>, {
+                                name: '<%= person.name %>',
+                                height: '<%= person.height %>',
+                                weight: '<%= person.weight %>',
+                                favfood: '<%= person.favfood %>',
+                                job: '<%= person.job %>'
+                            })">Save</button>
+                            <button type="button" onclick="hideEditForm(<%= person.id %>)">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </li>
             <% }) %>
         </ul>
         <% } else { %>
@@ -44,5 +94,39 @@
         </p>
         <p>Or remove it <a href="/person/remove">here</a></p>
         <a href="/">Back</a>
+
+        <script>
+            function showEditForm(personId) {
+                document.getElementById('display-' + personId).style.display = 'none';
+                document.getElementById('form-' + personId).style.display = 'block';
+            }
+
+            function hideEditForm(personId) {
+                document.getElementById('form-' + personId).style.display = 'none';
+                document.getElementById('display-' + personId).style.display = 'flex';
+            }
+
+            function handleSave(personId, originalData) {
+                //Gets the form data, and creates a FormData object you can access data with FormData.get('name')
+                const form = document.getElementById('edit-form-' + personId);
+                const formData = new FormData(form);
+                
+                // Check if any values changed
+                let hasChanges = false;
+                if (formData.get('name').trim !== originalData.name ||
+                    formData.get('height') !== originalData.height ||
+                    formData.get('weight') !== originalData.weight ||
+                    formData.get('favfood') !== originalData.favfood ||
+                    formData.get('job') !== originalData.job) {
+                    hasChanges = true;
+                }
+
+                if (hasChanges) {
+                    form.submit();
+                } else {
+                    hideEditForm(personId);
+                }
+            }
+        </script>
     </body>
-    </html>
+</html>

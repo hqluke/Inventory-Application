@@ -105,7 +105,7 @@ async function removeOccupation(title) {
 
 async function getAllPerson() {
     console.log("Calling database for people");
-    const { rows } = await pool.query("SELECT * FROM person");
+    const { rows } = await pool.query("SELECT * FROM person order by id");
     if (rows.length === 0) {
         console.log("No people found.");
     } else {

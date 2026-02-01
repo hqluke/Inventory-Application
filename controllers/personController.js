@@ -50,7 +50,13 @@ async function getPerson(req, res) {
         successMessage = "Person not edited, something went wrong!";
     }
 
-    res.render("personView", { person, successMessage, foods, occupations });
+    res.render("personView", {
+        person,
+        successMessage,
+        foods,
+        occupations,
+        errors: null,
+    });
 }
 
 async function getCreatePerson(req, res) {
@@ -117,6 +123,17 @@ async function postRemovePerson(req, res) {
 
 async function editPerson(req, res) {
     console.log("-----Edit Person Request-----");
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.render("personView.ejs", {
+            errors: errors.array(),
+            person: await db.getAllPerson(),
+            occupations: await db.getAllOccupations(),
+            foods: await db.getAllFood(),
+            successMessage: null,
+            errors: errors.array(),
+        });
+    }
     const { id, name, height, weight, favfood, job } = req.body;
     console.log("Id:", id);
     const result = await db.editPerson(id, name, height, weight, favfood, job);
